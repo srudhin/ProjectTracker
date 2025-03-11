@@ -127,10 +127,11 @@ function initializeDashboard() {
 function updateDepartmentChart() {
     console.log('Updating department chart...');
     const departmentData = window.dataManager.getProjectsByDepartment();
-    console.log('Department data:', departmentData);
     
-    const departments = Object.keys(departmentData);
-    const counts = Object.values(departmentData);
+    // Filter out departments with zero projects
+    const filteredDepartments = Object.keys(departmentData).filter(dept => departmentData[dept] > 0);
+    const filteredCounts = filteredDepartments.map(dept => departmentData[dept]);
+    
     const ctx = document.getElementById('departmentChart');
     
     if (!ctx) {
@@ -143,25 +144,71 @@ function updateDepartmentChart() {
     }
 
     departmentChart = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
-            labels: departments,
+            labels: filteredDepartments,
             datasets: [{
-                data: counts,
-                backgroundColor: chartColors.department
+                label: 'Projects by Department',
+                data: filteredCounts,
+                backgroundColor: [
+                    '#4e79a7', '#f28e2b', '#e15759', '#76b7b2',
+                    '#59a14f', '#edc948', '#b07aa1', '#ff9da7'
+                ],
+                borderWidth: 1
             }]
         },
-        options: defaultChartOptions
+        options: {
+            responsive: true,
+            cutout: '60%',
+            layout: {
+                padding: 10
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.raw + ' (' + ((context.raw / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1) + '%)';
+                            return label;
+                        }
+                    }
+                },
+                datalabels: {
+                    color: '#000',
+                    font: {
+                        weight: 'bold',
+                        size: 12
+                    },
+                    formatter: (value, ctx) => {
+                        const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        return value + ' (' + ((value / total) * 100).toFixed(1) + '%)';
+                    }
+                }
+            }
+        }
     });
 }
 
 function updateStatusChart() {
     console.log('Updating status chart...');
     const statusData = window.dataManager.getProjectsByStatus();
-    console.log('Status data:', statusData);
     
-    const statuses = Object.keys(statusData);
-    const counts = Object.values(statusData);
+    // Filter out statuses with zero projects
+    const filteredStatuses = Object.keys(statusData).filter(status => statusData[status] > 0);
+    const filteredCounts = filteredStatuses.map(status => statusData[status]);
+    
     const ctx = document.getElementById('statusChart');
     
     if (!ctx) {
@@ -174,15 +221,59 @@ function updateStatusChart() {
     }
 
     statusChart = new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut',
         data: {
-            labels: statuses,
+            labels: filteredStatuses,
             datasets: [{
-                data: counts,
-                backgroundColor: statuses.map(status => chartColors.status[status] || '#8B8778')
+                label: 'Projects by Status',
+                data: filteredCounts,
+                backgroundColor: [
+                    '#4e79a7', '#f28e2b', '#59a14f', '#e15759'
+                ],
+                borderWidth: 1
             }]
         },
-        options: defaultChartOptions
+        options: {
+            responsive: true,
+            cutout: '60%',
+            layout: {
+                padding: 10
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.raw + ' (' + ((context.raw / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1) + '%)';
+                            return label;
+                        }
+                    }
+                },
+                datalabels: {
+                    color: '#000',
+                    font: {
+                        weight: 'bold',
+                        size: 12
+                    },
+                    formatter: (value, ctx) => {
+                        const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        return value + ' (' + ((value / total) * 100).toFixed(1) + '%)';
+                    }
+                }
+            }
+        }
     });
 }
 

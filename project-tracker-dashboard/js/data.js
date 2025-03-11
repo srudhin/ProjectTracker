@@ -81,6 +81,8 @@ function updateProjectTable() {
                 </button>
             </td>
         `;
+        row.dataset.projectId = project.id || `project-${index}`;
+        row.style.cursor = 'pointer';
     });
 }
 
@@ -124,6 +126,31 @@ function setupEventListeners() {
     // Export button
     document.getElementById('exportBtn')?.addEventListener('click', () => {
         dataManager.exportToExcel();
+    });
+
+    // Save button
+    document.getElementById('saveBtn')?.addEventListener('click', async () => {
+        try {
+            await dataManager.saveToFile();
+            showNotification('Data saved successfully', 'success');
+        } catch (error) {
+            console.error('Error saving data:', error);
+            showNotification('Error saving data. Please try again.', 'error');
+        }
+    });
+
+    // Load button
+    document.getElementById('loadBtn')?.addEventListener('click', async () => {
+        try {
+            const success = await dataManager.loadFromFile();
+            if (success) {
+                updateProjectTable();
+                showNotification('Data loaded successfully', 'success');
+            }
+        } catch (error) {
+            console.error('Error loading data:', error);
+            showNotification('Error loading data. Please check the file format.', 'error');
+        }
     });
 
     // Clear Data functionality
@@ -268,5 +295,70 @@ function debounce(func, wait) {
     };
 }
 
+// Project Detail Popup Functionality
+const projectDetailPopup = document.getElementById('projectDetailPopup');
+const closePopupBtn = projectDetailPopup.querySelector('.close-btn');
+const projectInfoContainer = projectDetailPopup.querySelector('.project-info');
+
+// Function to show project details
+function showProjectDetails(project) {
+    console.group('Showing project details');
+    console.log('Project data:', project);
+    if (!project) {
+        console.error('Project is undefined or null');
+        console.groupEnd();
+        return;
+    }
+    projectInfoContainer.innerHTML = `
+        <div class='project-details-grid'>
+            <p><strong>Department:</strong> ${project['Department'] || 'N/A'}</p>
+            <p><strong>Project Title:</strong> ${project['Project Title'] || 'N/A'}</p>
+            <p><strong>Description:</strong> ${project['Description'] || 'N/A'}</p>
+            <p><strong>Focal In-Charge:</strong> ${project['Focal In-Charge'] || 'N/A'}</p>
+            <p><strong>Vendor Name:</strong> ${project['Vendor Name'] || 'N/A'}</p>
+            <p><strong>WO Issuance Date:</strong> ${project['WO Issuance Date'] || 'N/A'}</p>
+            <p><strong>Status:</strong> <span class='status-badge ${(project['Status'] || '').toLowerCase().replace(' ', '-')}'>${project['Status'] || 'N/A'}</span></p>
+            <p><strong>Timeline:</strong> ${project['Timeline'] || 'N/A'}</p>
+            <p><strong>Revised Timeline:</strong> ${project['Revised Timeline'] || 'N/A'}</p>
+            <p><strong>Dependencies/Risks:</strong> ${project['Dependencies/Risks'] || 'N/A'}</p>
+            <p><strong>Key Deliverables:</strong> ${project['Key Deliverables'] || 'N/A'}</p>
+            <p><strong>Milestones Achieved:</strong> ${project['Milestones Achieved'] || 'N/A'}</p>
+            <p><strong>Budget:</strong> ${project['Budget'] || 'N/A'}</p>
+            <p><strong>PO Value:</strong> ${project['PO Value'] || 'N/A'}</p>
+            <p><strong>Budget Utilization:</strong> ${project['Budget Utilization (%)'] || 'N/A'}</p>
+            <p><strong>YTD Utilization:</strong> ${project['YTD Utilization'] || 'N/A'}</p>
+            <p><strong>Balance:</strong> ${project['Balance'] || 'N/A'}</p>
+            <p><strong>Total YEP:</strong> ${project['Total YEP'] || 'N/A'}</p>
+            <p><strong>Remarks:</strong> ${project['Remarks'] || 'N/A'}</p>
+        </div>
+    `;
+    projectDetailPopup.style.display = 'flex';
+    console.groupEnd();
+}
+
+// Close popup functionality
+closePopupBtn.addEventListener('click', () => {
+    projectDetailPopup.style.display = 'none';
+});
+
+// Add click handlers to project rows
+function setupProjectRowClickHandlers() {
+    const projectRows = document.querySelectorAll('#projectTable tbody tr');
+    projectRows.forEach(row => {
+        row.addEventListener('click', () => {
+            const projectIndex = Array.from(row.parentNode.children).indexOf(row);
+            const project = dataManager.getAllProjects()[projectIndex];
+            if (project) {
+                showProjectDetails(project);
+            } else {
+                console.error('Project not found at index:', projectIndex);
+            }
+        });
+    });
+}
+
 // Initialize when the page loads
-document.addEventListener('DOMContentLoaded', initializeDataView);
+document.addEventListener('DOMContentLoaded', () => {
+    initializeDataView();
+    setupProjectRowClickHandlers();
+});

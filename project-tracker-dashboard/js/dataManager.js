@@ -41,7 +41,39 @@ class DataManager {
         }
     }
 
+    saveToFile() {
+        try {
+            const data = JSON.stringify({ projects: this.projects }, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            // Add timestamp to filename
+            const now = new Date();
+            const timestamp = now.toISOString().replace(/[:.]/g, '-');
+            const filename = `projects_${timestamp}.json`;
+            
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            console.log('Data saved successfully');
+            return true;
+        } catch (error) {
+            console.error('Error saving to file:', error);
+            return false;
+        }
+    }
+
     addProject(project) {
+        // Generate unique ID if not provided
+        if (!project.id) {
+            project.id = `project-${this.projects.length + 1}`;
+        }
         this.projects.push(project);
         this.saveToLocalStorage();
     }
@@ -260,10 +292,66 @@ class DataManager {
         });
     }
 
+    async loadFromFile() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        document.body.appendChild(input);
+        
+        return new Promise((resolve, reject) => {
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                document.body.removeChild(input);
+                
+                if (!file) {
+                    reject('No file selected');
+                    return;
+                }
+                
+                try {
+                    const fileData = await file.text();
+                    const parsedData = JSON.parse(fileData);
+                    
+                    if (parsedData && parsedData.projects) {
+                        this.projects = parsedData.projects;
+                        this.saveToLocalStorage();
+                        resolve(true);
+                    } else {
+                        reject('Invalid file format');
+                    }
+                } catch (error) {
+                    console.error('Error loading file:', error);
+                    reject('Error loading file');
+                }
+            };
+            
+            input.click();
+        });
+    }
+
     exportToExcel() {
         const ws = XLSX.utils.json_to_sheet(this.projects);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Projects');
         XLSX.writeFile(wb, 'projects.xlsx');
+    }
+
+    // Get project by ID
+    getProjectById(id) {
+        console.group('Looking for project with ID:', id);
+        console.log('All projects:', this.projects);
+        const foundProject = this.projects.find(project => {
+            if (project.id === id || project['Project ID'] === id) {
+                return true;
+            }
+            if (id.startsWith('project-')) {
+                const numericId = id.replace('project-', '');
+                return project.id === numericId || project['Project ID'] === numericId;
+            }
+            return false;
+        });
+        console.log('Found project:', foundProject);
+        console.groupEnd();
+        return foundProject;
     }
 }

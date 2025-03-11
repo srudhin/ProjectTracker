@@ -11,7 +11,7 @@
     <div class="container">
         <aside class="sidebar">
             <div class="logo">
-                <i class="fas fa-chart-line"></i>
+                <i class="fas fa-project-diagram"></i>
                 <h1>Project Tracker</h1>
             </div>
             <nav>
@@ -27,17 +27,47 @@
             <header>
                 <h2>View Data</h2>
                 <div class="actions">
+                    <div class="dropdown" role="menu">
+                        <button class="btn dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-file-excel"></i> Excel Operations <i class="fas fa-caret-down"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="menuitem">
+                                <button id="downloadTemplateBtn" class="dropdown-item">
+                                    <i class="fas fa-file-download"></i> Download Template
+                                </button>
+                            </li>
+                            <li role="menuitem">
+                                <button id="importBtn" class="dropdown-item">
+                                    <i class="fas fa-file-import"></i> Import Excel
+                                </button>
+                            </li>
+                            <li role="menuitem">
+                                <button id="exportBtn" class="dropdown-item">
+                                    <i class="fas fa-file-export"></i> Export Excel
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="dropdown" role="menu">
+                        <button class="btn dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-save"></i> Local Persistence <i class="fas fa-caret-down"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="menuitem">
+                                <button id="saveBtn" class="dropdown-item">
+                                    <i class="fas fa-save"></i> Save to File
+                                </button>
+                            </li>
+                            <li role="menuitem">
+                                <button id="loadBtn" class="dropdown-item">
+                                    <i class="fas fa-upload"></i> Load from File
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                     <button id="clearDataBtn" class="btn btn-danger">
                         <i class="fas fa-trash-alt"></i> Clear All Data
-                    </button>
-                    <button id="downloadTemplateBtn" class="btn">
-                        <i class="fas fa-file-download"></i> Download Template
-                    </button>
-                    <button id="importBtn" class="btn">
-                        <i class="fas fa-file-import"></i> Import Excel
-                    </button>
-                    <button id="exportBtn" class="btn">
-                        <i class="fas fa-file-export"></i> Export Excel
                     </button>
                 </div>
             </header>
@@ -88,11 +118,24 @@
         </main>
     </div>
 
+    <!-- Project Detail Popup -->
+    <div id="projectDetailPopup" class="project-popup">
+        <div class="popup-content">
+            <button class="close-btn">&times;</button>
+            <h3>Project Details</h3>
+            <div class="project-info">
+                <!-- Project details will be populated here -->
+            </div>
+        </div>
+    </div>
+
     <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="js/dataManager.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/fileManager.js"></script>
+    <script src="js/dropdown.js"></script>
 </body>
 </html>
