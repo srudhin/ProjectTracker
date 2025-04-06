@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - User Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Tile Layout */
+        .admin-tiles {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .tile {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            transition: transform 0.2s ease;
+        }
+
+        .tile:hover {
+            transform: translateY(-5px);
+        }
+
+        .tile h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        /* Checkbox Styling */
+		.checkbox-group {
+			display: grid; /* Switch to grid for better control */
+			grid-template-columns: repeat(2, 1fr); /* Two columns, equal width */
+			gap: 10px 20px; /* Vertical and horizontal spacing */
+			padding: 10px 0; /* Padding around the group */
+			max-height: 200px; /* Limit height, scroll if needed */
+			overflow-y: auto; /* Scroll if too many items */
+		}
+
+		/* Style each checkbox label */
+		.checkbox-group label {
+			display: flex;
+			align-items: center;
+			font-size: 0.95rem; /* Slightly smaller for readability */
+			color: #333;
+			cursor: pointer;
+			padding: 0; /* Vertical padding for touch targets */
+		}
+
+		/* Checkbox input styling */
+		.checkbox-group input[type="checkbox"] {
+			margin-right: 8px; /* Space between checkbox and text */
+			width: 16px; /* Consistent size */
+			height: 16px;
+			accent-color: #2a5298; /* Matches your theme */
+		}
+
+		/* Hover effect for interactivity */
+		.checkbox-group label:hover {
+			background: #f5f7fa; /* Subtle highlight */
+			border-radius: 3px;
+		}
+        /* Button */
+        .btn {
+            background: #2a5298;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #1e3c72;
+        }
+
+        /* User List */
+        .user-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-item button {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .user-item button:hover {
+            background: #4b5563;
+        }
+
+        .user-item button.delete {
+            background: #dc3545;
+        }
+
+        .user-item button.delete:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-project-diagram"></i>
+                <h1>Project Tracker</h1>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user"></i>
+                <span id="loggedInUser">Loading...</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="admin.html" class="active"><i class="fas fa-user-cog"></i> User Admin</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header>
+                <h2>User Management</h2>
+            </header>
+            <div class="content admin-tiles">
+                <!-- Tile 1: Create User -->
+                <div class="tile">
+                    <h3>Create New User</h3>
+                    <form id="createUserForm">
+                        <div class="form-group">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Departments:</label>
+                            <div class="checkbox-group" id="departments">
+                                <label><input type="checkbox" value="Marketing & Operations - HO"> Marketing & Operations - HO</label>
+                                <label><input type="checkbox" value="Terminal - Haldia"> Terminal - Haldia</label>
+                                <label><input type="checkbox" value="Terminal - Ennore"> Terminal - Ennore</label>
+                                <label><input type="checkbox" value="Retail/ALDS - HO"> Retail/ALDS - HO</label>
+                                <label><input type="checkbox" value="HR"> HR</label>
+                                <label><input type="checkbox" value="IT"> IT</label>
+                                <label><input type="checkbox" value="Finance"> Finance</label>
+                                <label><input type="checkbox" value="Others"> Others</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">Create User</button>
+                    </form>
+                    <p id="createMessage" style="display: none; margin-top: 10px;"></p>
+                </div>
+
+                <!-- Tile 2: User List -->
+                <div class="tile">
+                    <h3>User List</h3>
+                    <div class="user-list" id="userList"></div>
+                </div>
+            </div>
+        </main>
+        <!-- Custom Modal -->
+        <div id="customModal" class="modal">
+            <div class="modal-content">
+                <p id="modalMessage"></p>
+                <div id="modalButtons">
+                    <button id="modalCloseBtn" class="modal-btn">OK</button>
+                    <button id="modalYesBtn" class="modal-btn modal-btn-yes" style="display: none;">Yes</button>
+                    <button id="modalNoBtn" class="modal-btn modal-btn-no" style="display: none;">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/dataManager.js"></script>
+    <script>
+        async function checkSession() {
+            const response = await fetch('http://localhost/project_tracker/api/check_session.php');
+            const result = await response.json();
+            if (!result.success || !result.is_admin) {
+                window.location.href = 'login.html';
+            }
+            return result;
+        }
+
+        let sessionData;
+
+        async function initializeAdmin() {
+            sessionData = await checkSession();
+            displayUsername();
+            loadUserList();
+        }
+
+        function displayUsername() {
+            const userSpan = document.getElementById('loggedInUser');
+            if (userSpan && sessionData.username) {
+                userSpan.textContent = sessionData.username;
+            } else {
+                userSpan.textContent = 'Unknown User';
+                console.error('Username not found in session data or DOM element missing.');
+            }
+        }
+
+        async function loadUserList() {
+            try {
+                const response = await fetch('http://localhost/project_tracker/api/get_users.php');
+                const users = await response.json();
+                const userList = document.getElementById('userList');
+                userList.innerHTML = '';
+
+                users.forEach(user => {
+                    const div = document.createElement('div');
+                    div.className = 'user-item';
+                    div.innerHTML = `
+                        <span>${user.username}</span>
+                        <div>
+                            <button class="change-pwd" data-id="${user.id}">Change Password</button>
+                            <button class="delete" data-id="${user.id}">Delete</button>
+                        </div>
+                    `;
+                    userList.appendChild(div);
+                });
+
+                // Add event listeners for buttons
+                document.querySelectorAll('.change-pwd').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const userId = e.target.dataset.id;
+                        const newPassword = prompt('Enter new password:'); // Replace with a modal later
+                        if (newPassword) {
+                            await changePassword(userId, newPassword);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.delete').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const userId = e.target.dataset.id;
+                        const confirmed = await showConfirm(`Are you sure you want to delete user ID ${userId}?`);
+                        if (confirmed) {
+                            await deleteUser(userId);
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading users:', error);
+                showMessage('Failed to load user list.');
+            }
+        }
+
+        document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const departments = Array.from(document.querySelectorAll('#departments input:checked')).map(input => input.value);
+
+            try {
+                const response = await fetch('http://localhost/project_tracker/api/create_user.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, departments })
+                });
+                const result = await response.json();
+
+                const msg = document.getElementById('createMessage');
+                if (result.success) {
+                    msg.textContent = `User ${result.username} created successfully`;
+                    msg.style.color = 'green';
+                    msg.style.display = 'block';
+                    document.getElementById('createUserForm').reset();
+                    loadUserList(); // Refresh user list
+                } else {
+                    msg.textContent = result.error;
+                    msg.style.color = 'red';
+                    msg.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Create user error:', error);
+                showMessage('An error occurred while creating the user.');
+            }
+        });
+
+        async function changePassword(userId, newPassword) {
+            try {
+                const response = await fetch('http://localhost/project_tracker/api/change_password.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, password: newPassword })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('Password changed successfully!');
+                } else {
+                    showMessage(result.error || 'Failed to change password.');
+                }
+            } catch (error) {
+                console.error('Change password error:', error);
+                showMessage('An error occurred while changing the password.');
+            }
+        }
+
+        async function deleteUser(userId) {
+            try {
+                const response = await fetch('http://localhost/project_tracker/api/delete_user.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('User deleted successfully!');
+                    loadUserList(); // Refresh user list
+                } else {
+                    showMessage(result.error || 'Failed to delete user.');
+                }
+            } catch (error) {
+                console.error('Delete user error:', error);
+                showMessage('An error occurred while deleting the user.');
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('http://localhost/project_tracker/api/logout.php', { method: 'POST' });
+            window.location.href = 'login.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAdmin();
+        });
+    </script>
+</body>
+</html>

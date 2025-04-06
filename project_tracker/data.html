@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Tracker - View Data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-project-diagram"></i>
+                <h1>Project Tracker</h1>
+            </div>
+			<div class="user-info">
+                <i class="fas fa-user"></i>
+                <span id="loggedInUser">Loading...</span>
+            </div>
+            <nav>
+                <ul>
+					<li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="data.html" class="active"><i class="fas fa-table"></i> View Data</a></li>
+                    <li><a href="entry.html"><i class="fas fa-plus-circle"></i> Add Project</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h2>View Data</h2>
+                <div class="actions">
+                    <div class="dropdown" role="menu">
+                        <button class="btn dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-file-excel"></i> Excel Operations <i class="fas fa-caret-down"></i>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="menuitem">
+                                <button id="downloadTemplateBtn" class="dropdown-item">
+                                    <i class="fas fa-file-download"></i> Download Template
+                                </button>
+                            </li>
+                            <li role="menuitem">
+                                <button id="importBtn" class="dropdown-item">
+                                    <i class="fas fa-file-import"></i> Import Excel
+                                </button>
+                            </li>
+                            <li role="menuitem">
+                                <button id="exportBtn" class="dropdown-item">
+                                    <i class="fas fa-file-export"></i> Export Excel
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="data-filters">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search projects...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="departmentFilter">Department:</label>
+                        <select id="departmentFilter">
+                            <option value="">All Departments</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="statusFilter">Status:</label>
+                        <select id="statusFilter">
+                            <option value="">All Status</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-container">
+                        <table id="projectTable">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Project Title</th>
+                                    <th>Focal In-Charge</th>
+                                    <th>Status</th>
+                                    <th>Timeline</th>
+                                    <th>Budget</th>
+                                    <th>PO Value</th>
+                                    <th>YTD Utilization</th>
+                                    <th>Balance</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Project rows will be added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+<div id="customModal" class="modal">
+            <div class="modal-content">
+                <p id="modalMessage"></p>
+                <div id="modalButtons">
+                    <button id="modalCloseBtn" class="modal-btn">OK</button>
+                    <button id="modalYesBtn" class="modal-btn modal-btn-yes" style="display: none;">Yes</button>
+                    <button id="modalNoBtn" class="modal-btn modal-btn-no" style="display: none;">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Detail Popup -->
+    <div id="projectDetailPopup" class="project-popup">
+        <div class="popup-content">
+            <button class="close-btn">&times;</button>
+            <h3>Project Details</h3>
+            <div class="project-info">
+                <!-- Project details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="js/dataManager.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/fileManager.js"></script>
+    <script src="js/dropdown.js"></script>
+	<script src="js/utils.js"></script>
+</body>
+</html>

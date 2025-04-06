@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Tracker Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-project-diagram"></i>
+                <h1>Project Tracker</h1>
+            </div>
+
+            <div class="user-info">
+                <i class="fas fa-user"></i>
+                <span id="loggedInUser">Loading...</span>
+            </div>
+            <nav>
+                <ul>
+					<li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    <li id="adminLink" style="display: none;"><a href="admin.html"><i class="fas fa-user-shield"></i> Admin</a></li>
+					<li><a href="index.html" class="active" data-tooltip="View project metrics and charts"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="data.html" data-tooltip="Explore detailed project data"><i class="fas fa-table"></i> View Data</a></li>
+                    <li><a href="entry.html" data-tooltip="Add new project details"><i class="fas fa-plus-circle"></i> Add Project</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h2>Dashboard</h2>
+                <div class="actions">
+                    <button id="refreshBtn" class="btn">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="data-filters">
+                    <div class="filter-group">
+                        <label for="departmentFilter">Department:</label>
+                        <select id="departmentFilter">
+                            <option value="">All Departments</option>
+                            <option value="Marketing & Operations - HO">Marketing & Operations - HO</option>
+                            <option value="Terminal - Haldia">Terminal - Haldia</option>
+                            <option value="Terminal - Ennore">Terminal - Ennore</option>
+                            <option value="Retail/ALDS - HO">Retail/ALDS - HO</option>
+                            <option value="HR">HR</option>
+                            <option value="IT">IT</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="statusFilter">Status:</label>
+                        <select id="statusFilter">
+                            <option value="">All Status</option>
+                            <option value="Planned">Planned</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="On Hold">On Hold</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-tile">
+                        <h3>Total PO Value</h3>
+                        <p id="totalPOValue">₹0</p>
+                    </div>
+                    <div class="metric-tile">
+                        <h3>Total YTD Utilization</h3>
+                        <p id="totalYTD">₹0</p>
+                    </div>
+                    <div class="metric-tile">
+                        <h3>Total Balance</h3>
+                        <p id="totalBalance">₹0</p>
+                    </div>
+                    <div class="metric-tile">
+                        <h3>Total YEP</h3>
+                        <p id="totalYEP">₹0</p>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-card">
+                        <h2>Projects by Department</h2>
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h2>Projects by Status</h2>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="department-summary">
+                    <h2>Department Summary</h2>
+                    <table id="departmentSummaryTable">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Total PO Value</th>
+                                <th>YTD Utilization</th>
+                                <th>Balance</th>
+                                <th>Total YEP</th>
+                                <th>Active Projects</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
+
+    <!-- Load scripts in the correct order -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="js/dataManager.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
